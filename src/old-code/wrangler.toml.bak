@@ -1,0 +1,18 @@
+#这个文件用于开发者知道数据和部署 当然现在用的是pages 绑定所以这些都是旧数据
+
+name = "faka"
+# ⚠️ 这里是关键！告诉 Cloudflare 新的入口文件在哪里
+main = "worker"
+compatibility_date = "2026-04-26"
+
+# --- 数据库绑定 ---
+[[kv_namespaces]]
+binding = "FAKA_DATA"
+id = "0fa4a6d48b404197a5c54223ce8651a7"
+
+# --- 环境变量配置 ---
+[vars]
+TITLE = "V-MQ Enterprise"
+ADMIN_PATH = "/admin"
+ADMIN_PASSWORD = "z2458181028"
+APP_SECRET = "123456"
