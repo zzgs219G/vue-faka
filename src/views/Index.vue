@@ -441,22 +441,32 @@ const loadSite = async () => {
 };
 
 const refreshLocalOrdersStatus = async () => {
-  let updated = false;
-  for (let o of localOrders.value) {
-    if (o.status !== 'paid' && o.status !== 'expired') {
-       try {
-         const res = await api('/api/order/check?orderId=' + o.orderId + '&t=' + Date.now());
-         if (res && res.status) { o.status = res.status; updated = true; }
-       } catch(e){}
+  const pendingOrders = localOrders.value.filter(o => o.status !== 'paid' && o.status !== 'expired');
+  if (pendingOrders.length === 0) return;
+
+  const orderIds = pendingOrders.map(o => o.orderId);
+  try {
+    const res = await api('/api/order/checkBatch', {
+      method: 'POST',
+      body: JSON.stringify({ orderIds })
+    });
+
+    let updated = false;
+    for (let o of pendingOrders) {
+      if (res[o.orderId] && res[o.orderId] !== o.status) {
+        o.status = res[o.orderId];
+        updated = true;
+      }
     }
-  }
-  if (updated) localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
+
+    if (updated) localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
+  } catch (e) {}
 };
 
 watch(frontTab, (val) => { if (val === 'orders') refreshLocalOrdersStatus(); });
 
 const clearAllTimers = () => {
-   if (buyUI.timer) clearInterval(buyUI.timer);
+   if (buyUI.timer) clearTimeout(buyUI.timer);
    if (buyUI.countDownTimer) clearInterval(buyUI.countDownTimer);
    if (buyUI.sseSource) { buyUI.sseSource.close(); buyUI.sseSource = null; }
    buyUI.timer = null; buyUI.countDownTimer = null;
@@ -472,7 +482,10 @@ const fallbackCheckPaymentStatus = async () => {
     } else if (chk && chk.status === 'expired') {
        clearAllTimers(); showToast('订单已超时关闭','error'); closeBuy();
     } else if (chk && chk.status === 'pending') {
-       if (!buyUI.sseSource && !buyUI.timer) buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 3000);
+       if (!buyUI.sseSource) {
+           if (buyUI.timer) clearTimeout(buyUI.timer);
+           buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 3000);
+       }
     }
   } catch(e) {}
 };
@@ -481,7 +494,8 @@ const startSSEListener = (orderId) => {
     if (buyUI.sseSource) buyUI.sseSource.close();
 
     if (typeof EventSource === "undefined") {
-         buyUI.timer = setInterval(fallbackCheckPaymentStatus, 3000);
+         if (buyUI.timer) clearTimeout(buyUI.timer);
+         buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 3000);
          return;
     }
 
@@ -506,7 +520,8 @@ const startSSEListener = (orderId) => {
     buyUI.sseSource.onerror = () => {
         if (buyUI.sseSource) buyUI.sseSource.close();
         if (buyUI.show && buyUI.step === 2) {
-           setTimeout(fallbackCheckPaymentStatus, 2000);
+           if (buyUI.timer) clearTimeout(buyUI.timer);
+           buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 2000);
         }
     };
 };
