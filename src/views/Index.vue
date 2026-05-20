@@ -1,31 +1,5 @@
-
-<!-- 文件名: index.html -->
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="referrer" content="no-referrer">
-  <title>加载中...</title>
-  <script src="/assets/vue_global_prod.js"></script>
-  <script src="/assets/tailwindcss.js"></script>
-  <link href="/assets/remixicon.css" rel="stylesheet">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #f8fafc; color: #334155; }
-    [v-cloak] { display: none !important; }
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
-    .fade-enter-from, .fade-leave-to { opacity: 0; transform: scale(0.95); }
-    .mail-pulse { animation: mailPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes mailPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .7; transform: scale(1.05); } }
-    @keyframes priceAlert { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); } 50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); } }
-    .price-alert-anim { animation: priceAlert 2s infinite; }
-    @keyframes successPop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
-    .success-pop-anim { animation: successPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-  </style>
-</head>
-<body>
-  <div id="app" v-cloak>
+<template>
+<div>
     
     <!-- 全局加载遮罩 -->
     <Transition name="fade">
@@ -67,7 +41,7 @@
           <div class="flex space-x-1 flex-shrink-0">
             <button @click="frontTab = 'home'" :class="frontTab==='home'?'text-blue-600 bg-blue-50':'text-slate-500 hover:bg-slate-100'" class="px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-xs md:text-sm font-bold transition whitespace-nowrap"><i class="ri-store-2-line mr-0.5 md:mr-1"></i>商城</button>
             <button @click="frontTab = 'orders'" :class="frontTab==='orders'?'text-blue-600 bg-blue-50':'text-slate-500 hover:bg-slate-100'" class="px-2.5 py-1.5 md:px-3 md:py-2 rounded-xl text-xs md:text-sm font-bold transition whitespace-nowrap"><i class="ri-file-list-3-line mr-0.5 md:mr-1"></i>订单</button>
-            <a href="admin.html" class="px-2 md:px-3 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold text-slate-400 hover:text-slate-700 transition whitespace-nowrap"><i class="ri-shield-user-line"></i></a>
+            <router-link to="/admin" class="px-2 md:px-3 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold text-slate-400 hover:text-slate-700 transition whitespace-nowrap"><i class="ri-shield-user-line"></i></router-link>
           </div>
         </div>
       </nav>
@@ -89,7 +63,7 @@
               </div>
               <div class="relative md:w-64 flex-shrink-0">
                 <i class="ri-search-line absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input v-model="searchKey" placeholder="搜索商品..." class="w-full pl-9 pr-4 py-2.5 md:py-3 bg-white border border-slate-200 rounded-xl md:rounded-2xl text-xs md:text-sm focus:ring-2 ring-blue-100 outline-none transition shadow-sm">
+                <input v-model="searchKey" placeholder="搜索商品..." class="w-full pl-9 pr-4 py-2.5 md:py-3 bg-white border border-slate-200 rounded-xl md:rounded-2xl text-xs md:text-sm focus:ring-2 ring-blue-100 outline-none transition shadow-sm"/>
               </div>
             </div>
 
@@ -108,7 +82,7 @@
                 
                 <div class="flex items-center mb-3">
                   <div class="w-10 h-10 md:w-14 md:h-14 bg-blue-50 rounded-lg md:rounded-xl border border-blue-100 flex-shrink-0 flex items-center justify-center overflow-hidden mr-2 md:mr-3">
-                     <img v-if="p.icon" :src="p.icon" class="w-full h-full object-cover">
+                     <img v-if="p.icon" :src="p.icon" class="w-full h-full object-cover"/>
                      <i v-else class="ri-shopping-bag-3-fill text-lg md:text-2xl text-blue-400"></i>
                   </div>
                   <div class="flex-grow min-w-0">
@@ -141,7 +115,7 @@
               <div class="relative mb-5 md:mb-6 flex space-x-2">
                 <div class="relative flex-grow">
                   <i class="ri-hashtag absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input v-model="queryId" placeholder="输入单号查单" class="w-full pl-9 md:pl-10 pr-4 py-2.5 md:py-3 bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl focus:ring-2 ring-blue-100 outline-none font-mono text-xs md:text-sm transition">
+                  <input v-model="queryId" placeholder="输入单号查单" class="w-full pl-9 md:pl-10 pr-4 py-2.5 md:py-3 bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl focus:ring-2 ring-blue-100 outline-none font-mono text-xs md:text-sm transition"/>
                 </div>
                 <button @click="doQuery(queryId)" class="bg-slate-800 hover:bg-slate-900 text-white px-4 md:px-6 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold transition shadow-md whitespace-nowrap active:scale-95">深度查询</button>
               </div>
@@ -242,9 +216,9 @@
               </div>
 
               <div class="h-40 md:h-48 bg-slate-50 relative mb-4 flex items-center justify-center">
-                 <img v-if="buyUI.product.image" :src="buyUI.product.image" class="w-full h-full object-cover">
+                 <img v-if="buyUI.product.image" :src="buyUI.product.image" class="w-full h-full object-cover"/>
                  <div v-else class="w-full h-full bg-blue-50 flex items-center justify-center border-b border-blue-100">
-                     <img v-if="buyUI.product.icon" :src="buyUI.product.icon" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
+                     <img v-if="buyUI.product.icon" :src="buyUI.product.icon" class="w-20 h-20 rounded-2xl object-cover shadow-sm"/>
                      <i v-else class="ri-shopping-bag-3-fill text-5xl text-blue-300"></i>
                  </div>
                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-12">
@@ -270,7 +244,7 @@
                 <label class="text-xs font-bold text-slate-500 mb-2 flex justify-between"><span>接收邮箱 (选填，防丢备份)</span></label>
                 <div class="relative mb-5">
                   <i class="ri-mail-line absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                  <input v-model="buyUI.contact" placeholder="填写邮箱以便接收卡密备份" class="w-full border border-slate-200 rounded-xl pl-10 pr-4 py-3 focus:border-blue-500 outline-none text-sm bg-slate-50 focus:bg-white transition shadow-sm">
+                  <input v-model="buyUI.contact" placeholder="填写邮箱以便接收卡密备份" class="w-full border border-slate-200 rounded-xl pl-10 pr-4 py-3 focus:border-blue-500 outline-none text-sm bg-slate-50 focus:bg-white transition shadow-sm"/>
                 </div>
                 
                 <button @click="doBuy" :disabled="buyUI.loading" class="w-full bg-slate-900 disabled:bg-slate-200 text-white font-bold py-3.5 rounded-2xl transition shadow-lg active:scale-95">
@@ -302,7 +276,7 @@
                          <button @click="buyUI.editContactInput = buyUI.order.contact; buyUI.editingContact = true" class="text-[10px] md:text-xs bg-white text-blue-600 hover:bg-blue-50 px-2 py-1 border border-blue-100 rounded-lg font-bold transition flex-shrink-0 shadow-sm">修改</button>
                       </div>
                       <div v-else class="flex items-center space-x-2 w-full">
-                         <input v-model="buyUI.editContactInput" placeholder="常用邮箱" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs md:text-sm focus:border-blue-500 outline-none shadow-sm transition">
+                         <input v-model="buyUI.editContactInput" placeholder="常用邮箱" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs md:text-sm focus:border-blue-500 outline-none shadow-sm transition"/>
                          <button @click="updateOrderContact" class="bg-blue-600 text-white text-xs font-bold px-2 py-1.5 rounded-lg shadow-sm hover:bg-blue-700 transition active:scale-95 flex-shrink-0">保存</button>
                          <button @click="buyUI.editingContact = false" class="bg-slate-200 text-slate-600 text-xs font-bold px-2 py-1.5 rounded-lg hover:bg-slate-300 transition active:scale-95 flex-shrink-0">取消</button>
                       </div>
@@ -326,7 +300,7 @@
                 <p v-else class="text-[10px] md:text-xs text-blue-600 mb-3 font-bold bg-blue-50 inline-block px-4 py-2 rounded-full border border-blue-100"><i class="ri-scan-2-line mr-1"></i>请扫码支付 或 截屏保存到相册扫一扫</p>
                 
                 <div class="w-40 md:w-48 p-2 border-2 border-blue-100 rounded-2xl bg-blue-50 shadow-sm mb-1 relative">
-                  <img v-if="site.config.alipayQr" :src="site.config.alipayQr" class="w-full rounded-xl" alt="支付宝收款码">
+                  <img v-if="site.config.alipayQr" :src="site.config.alipayQr" class="w-full rounded-xl" alt="支付宝收款码"/>
                 </div>
               </div>
 
@@ -335,7 +309,7 @@
                 <p class="text-[10px] md:text-xs text-emerald-600 mb-3 font-bold bg-emerald-50 inline-block px-4 py-2 rounded-full border border-emerald-100"><i class="ri-scan-2-line mr-1"></i>请扫码支付 或 截屏保存到相册扫一扫</p>
                 
                 <div class="w-40 md:w-48 p-2 border-2 border-emerald-100 rounded-2xl bg-emerald-50 shadow-sm mb-1 relative">
-                  <img v-if="site.config.wechatQr" :src="site.config.wechatQr" class="w-full rounded-xl" alt="微信收款码">
+                  <img v-if="site.config.wechatQr" :src="site.config.wechatQr" class="w-full rounded-xl" alt="微信收款码"/>
                 </div>
               </div>
 
@@ -374,279 +348,251 @@
       <i :class="toast.icon" class="mr-2 text-lg"></i> {{ toast.msg }}
     </div>
   </div>
+</template>
 
-  <script>
-    const { createApp, ref, reactive, computed, onMounted, watch } = Vue;
-    createApp({
-      setup() {
-        const toast = reactive({ show: false, msg: '', icon: '' });
-        const showToast = (msg, type='info') => {
-          toast.msg = msg; 
-          toast.icon = type==='success'?'ri-checkbox-circle-fill text-emerald-400':(type==='error'?'ri-close-circle-fill text-rose-400':'ri-information-fill text-blue-400');
-          toast.show = true; setTimeout(() => toast.show = false, 3000);
-        };
-        
-        const globalLoading = ref(false); 
-        
-        const api = async (path, opts={}) => {
-          try {
-            const fetchOpts = { ...opts };
-            if (!fetchOpts.method || fetchOpts.method === 'GET') {
-               fetchOpts.headers = { ...fetchOpts.headers, 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
-            }
-            const res = await fetch(path, fetchOpts);
-            const data = await res.json();
-            if(!res.ok) throw new Error(data.error || '请求失败，请检查网络或配置');
-            return data;
-          } catch(e) { showToast(e.message, 'error'); throw e; }
-        };
+<script setup>
+import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
-        const copy = (txt) => { navigator.clipboard.writeText(txt).then(()=>showToast('内容已复制到剪贴板','success')).catch(()=>showToast('复制失败，请手动选择','error')); };
-        const formatTime = (ms) => { 
-            if(ms<=0) return "00:00"; 
-            const s=Math.floor(ms/1000); return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; 
-        };
-        const formatRealTime = (ts) => { 
-            const d = new Date(ts); 
-            return `${d.getFullYear().toString().slice(-2)}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`; 
-        };
-        const getStockStatus = (stock) => {
-            if (stock <= 0) return '售罄'; if (stock <= 5) return '紧张'; if (stock <= 20) return '少量'; return '充足';
-        };
+const router = useRouter();
+const route = useRoute();
+const toast = reactive({ show: false, msg: '', icon: '' });
+const showToast = (msg, type='info') => {
+  toast.msg = msg;
+  toast.icon = type==='success'?'ri-checkbox-circle-fill text-emerald-400':(type==='error'?'ri-close-circle-fill text-rose-400':'ri-information-fill text-blue-400');
+  toast.show = true; setTimeout(() => toast.show = false, 3000);
+};
 
-                const frontTab = ref('home');
-        const site = reactive({ config: {}, categories: [], products: [] });
-        const activeCat = ref('all');
-        const isExclusiveMode = ref(false); // 新增：用来控制是否隐藏分类导航
+const globalLoading = ref(false);
 
-        const searchKey = ref('');
-        const showService = ref(false);
-        const showOrderModal = ref(false);
-        const queryId = ref(''); 
-        const queryRes = ref(null);
-        
-        const buyUI = reactive({ 
-            show: false, step: 1, product: null, contact: '', payMethod: 'alipay', order: null, 
-            loading: false, timer: null, countDownTimer: null, sseSource: null, timeLeft: 0, showContactWarning: false, confirmNoContact: false,
-            editingContact: false, editContactInput: '' 
-        });
-        
-        let localOrdersStr = localStorage.getItem('v_orders') || '[]';
-        let rawOrders = JSON.parse(localOrdersStr);
-        rawOrders = rawOrders.filter(o => (Date.now() - o.time) < 86400000);
-        const localOrders = ref(rawOrders);
-        localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
+const api = async (path, opts={}) => {
+  try {
+    const fetchOpts = { ...opts };
+    if (!fetchOpts.method || fetchOpts.method === 'GET') {
+       fetchOpts.headers = { ...fetchOpts.headers, 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
+    }
+    const res = await fetch(path, fetchOpts);
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || '请求失败，请检查网络或配置');
+    return data;
+  } catch(e) { showToast(e.message, 'error'); throw e; }
+};
 
-        const saveLocalOrder = (orderId, productName) => {
-           if(!localOrders.value.find(o => o.orderId === orderId)) {
-             localOrders.value.unshift({ orderId, productName, time: Date.now(), status: 'pending' });
-             if(localOrders.value.length > 20) localOrders.value.pop();
-             localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
-           }
-        };
+const copy = (txt) => { navigator.clipboard.writeText(txt).then(()=>showToast('内容已复制到剪贴板','success')).catch(()=>showToast('复制失败，请手动选择','error')); };
+const formatTime = (ms) => {
+    if(ms<=0) return "00:00";
+    const s=Math.floor(ms/1000); return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+};
+const formatRealTime = (ts) => {
+    const d = new Date(ts);
+    return `${d.getFullYear().toString().slice(-2)}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+};
+const getStockStatus = (stock) => {
+    if (stock <= 0) return '售罄'; if (stock <= 5) return '紧张'; if (stock <= 20) return '少量'; return '充足';
+};
 
-                const loadSite = async () => {
-          const d = await api('/api/public');
-          site.config = d.config; site.categories = d.categories; site.products = d.products;
-          
-          const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+const frontTab = ref('home');
+const site = reactive({ config: {}, categories: [], products: [] });
+const activeCat = ref('all');
+const isExclusiveMode = ref(false);
 
-          if (path && path !== 'admin.html' && path !== 'index.html') {
-            const matchedCat = site.categories.find(c => c.id === path);
-            if (matchedCat) {
-              activeCat.value = matchedCat.id; 
-              
-              // 【核心大绝招】：看后台有没有打勾！打了勾才开启专属隐藏模式，没打勾就正常显示商城全貌！
-              isExclusiveMode.value = matchedCat.isExclusive === true; 
-              
-              document.title = `${matchedCat.name} - ${site.config.siteName || '发卡网'}`;
-              return; 
-            }
-          }
-          document.title = site.config.siteName || '发卡网';
-        };
+const searchKey = ref('');
+const showService = ref(false);
+const showOrderModal = ref(false);
+const queryId = ref('');
+const queryRes = ref(null);
 
-          //如果没有匹配到，或者就是直接访问首页
-          
+const buyUI = reactive({
+    show: false, step: 1, product: null, contact: '', payMethod: 'alipay', order: null,
+    loading: false, timer: null, countDownTimer: null, sseSource: null, timeLeft: 0, showContactWarning: false, confirmNoContact: false,
+    editingContact: false, editContactInput: ''
+});
 
+let localOrdersStr = localStorage.getItem('v_orders') || '[]';
+let rawOrders = JSON.parse(localOrdersStr);
+rawOrders = rawOrders.filter(o => (Date.now() - o.time) < 86400000);
+const localOrders = ref(rawOrders);
+localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
 
-        const refreshLocalOrdersStatus = async () => {
-          let updated = false;
-          for (let o of localOrders.value) {
-            if (o.status !== 'paid' && o.status !== 'expired') {
-               try {
-                 // 查单这种强一致性操作，保留时间戳强制不缓存
-                 const res = await api('/api/order/check?orderId=' + o.orderId + '&t=' + Date.now());
-                 if (res && res.status) { o.status = res.status; updated = true; }
-               } catch(e){}
-            }
-          }
-          if (updated) localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
-        };
+const saveLocalOrder = (orderId, productName) => {
+   if(!localOrders.value.find(o => o.orderId === orderId)) {
+     localOrders.value.unshift({ orderId, productName, time: Date.now(), status: 'pending' });
+     if(localOrders.value.length > 20) localOrders.value.pop();
+     localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
+   }
+};
 
-        watch(frontTab, (val) => { if (val === 'orders') refreshLocalOrdersStatus(); });
+const loadSite = async () => {
+  const d = await api('/api/public');
+  site.config = d.config; site.categories = d.categories; site.products = d.products;
 
-        const clearAllTimers = () => {
-           if (buyUI.timer) clearInterval(buyUI.timer);
-           if (buyUI.countDownTimer) clearInterval(buyUI.countDownTimer);
-           if (buyUI.sseSource) { buyUI.sseSource.close(); buyUI.sseSource = null; }
-           buyUI.timer = null; buyUI.countDownTimer = null;
-        };
+  const path = route.path.replace(/^\/+|\/+$/g, '');
 
-        // 🚀 核心省流黑科技：启动 SSE 长连接监听
-        const startSSEListener = (orderId) => {
-            if (buyUI.sseSource) buyUI.sseSource.close();
+  if (path && path !== 'admin' && path !== 'admin.html' && path !== '') {
+    const matchedCat = site.categories.find(c => c.id === path);
+    if (matchedCat) {
+      activeCat.value = matchedCat.id;
+      isExclusiveMode.value = matchedCat.isExclusive === true;
+      document.title = `${matchedCat.name} - ${site.config.siteName || '发卡网'}`;
+      return;
+    }
+  }
+  document.title = site.config.siteName || '发卡网';
+};
 
-            // 兼容性检查
-            if (typeof EventSource === "undefined") {
-                 // 极其老旧的浏览器降级回轮询
-                 buyUI.timer = setInterval(fallbackCheckPaymentStatus, 3000);
-                 return;
-            }
+const refreshLocalOrdersStatus = async () => {
+  let updated = false;
+  for (let o of localOrders.value) {
+    if (o.status !== 'paid' && o.status !== 'expired') {
+       try {
+         const res = await api('/api/order/check?orderId=' + o.orderId + '&t=' + Date.now());
+         if (res && res.status) { o.status = res.status; updated = true; }
+       } catch(e){}
+    }
+  }
+  if (updated) localStorage.setItem('v_orders', JSON.stringify(localOrders.value));
+};
 
-            buyUI.sseSource = new EventSource('/api/order/stream?orderId=' + orderId);
+watch(frontTab, (val) => { if (val === 'orders') refreshLocalOrdersStatus(); });
 
-            buyUI.sseSource.addEventListener('status', (e) => {
-                try {
-                    const data = JSON.parse(e.data);
-                    if (data.status === 'paid') {
-                       clearAllTimers(); buyUI.order.card = data.card; buyUI.step = 3;
-                       showToast('交易支付成功！','success'); refreshLocalOrdersStatus();
-                    } else if (data.status === 'expired') {
-                       clearAllTimers(); showToast('订单已超时关闭','error'); closeBuy();
-                    }
-                } catch(err) {}
-            });
+const clearAllTimers = () => {
+   if (buyUI.timer) clearInterval(buyUI.timer);
+   if (buyUI.countDownTimer) clearInterval(buyUI.countDownTimer);
+   if (buyUI.sseSource) { buyUI.sseSource.close(); buyUI.sseSource = null; }
+   buyUI.timer = null; buyUI.countDownTimer = null;
+};
 
-            buyUI.sseSource.addEventListener('not_found', () => {
-                clearAllTimers(); showToast('订单不存在或已被清理','error'); closeBuy();
-            });
+const fallbackCheckPaymentStatus = async () => {
+  if (!buyUI.show || buyUI.step !== 2 || !buyUI.order) return;
+  try {
+    const chk = await api('/api/order/check?orderId=' + buyUI.order.orderId + '&t=' + Date.now());
+    if (chk && chk.status === 'paid') {
+       clearAllTimers(); buyUI.order.card = chk.card; buyUI.step = 3;
+       showToast('交易支付成功！','success'); refreshLocalOrdersStatus();
+    } else if (chk && chk.status === 'expired') {
+       clearAllTimers(); showToast('订单已超时关闭','error'); closeBuy();
+    } else if (chk && chk.status === 'pending') {
+       if (!buyUI.sseSource && !buyUI.timer) buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 3000);
+    }
+  } catch(e) {}
+};
 
-            buyUI.sseSource.onerror = () => {
-                // 连接出错时，关闭并在后台尝试降级轮询
-                if (buyUI.sseSource) buyUI.sseSource.close();
-                if (buyUI.show && buyUI.step === 2) {
-                   setTimeout(fallbackCheckPaymentStatus, 2000);
-                }
-            };
-        };
+const startSSEListener = (orderId) => {
+    if (buyUI.sseSource) buyUI.sseSource.close();
 
-        const fallbackCheckPaymentStatus = async () => {
-          if (!buyUI.show || buyUI.step !== 2 || !buyUI.order) return;
-          try {
-            const chk = await api('/api/order/check?orderId=' + buyUI.order.orderId + '&t=' + Date.now());
-            if (chk && chk.status === 'paid') {
-               clearAllTimers(); buyUI.order.card = chk.card; buyUI.step = 3;  
+    if (typeof EventSource === "undefined") {
+         buyUI.timer = setInterval(fallbackCheckPaymentStatus, 3000);
+         return;
+    }
+
+    buyUI.sseSource = new EventSource('/api/order/stream?orderId=' + orderId);
+
+    buyUI.sseSource.addEventListener('status', (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            if (data.status === 'paid') {
+               clearAllTimers(); buyUI.order.card = data.card; buyUI.step = 3;
                showToast('交易支付成功！','success'); refreshLocalOrdersStatus();
-            } else if (chk && chk.status === 'expired') {
+            } else if (data.status === 'expired') {
                clearAllTimers(); showToast('订单已超时关闭','error'); closeBuy();
-            } else if (chk && chk.status === 'pending') {
-               // 兜底轮询继续触发
-               if (!buyUI.sseSource && !buyUI.timer) buyUI.timer = setTimeout(fallbackCheckPaymentStatus, 3000);
             }
-          } catch(e) {}
-        };
+        } catch(err) {}
+    });
 
-        onMounted(() => {
-           loadSite();
-           // 前端主动触发对齐：页面重新可见时可以发一次兜底轮询以防长连接断开
-           document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') fallbackCheckPaymentStatus(); });
-           window.addEventListener('focus', () => fallbackCheckPaymentStatus());
-        });
+    buyUI.sseSource.addEventListener('not_found', () => {
+        clearAllTimers(); showToast('订单不存在或已被清理','error'); closeBuy();
+    });
 
-                const filteredProducts = computed(() => {
-          // 核心一步：过滤掉那些被后台打了 isHidden 标签的商品
-          let arr = site.products.filter(p => !p.isHidden); 
-          
-          if(activeCat.value !== 'all') arr = arr.filter(p => p.categoryId === activeCat.value);
-          if(searchKey.value) { 
-              const k = searchKey.value.toLowerCase(); 
-              arr = arr.filter(p => p.name.toLowerCase().includes(k) || (p.desc && p.desc.toLowerCase().includes(k))); 
-          }
-          return arr;
-        });
+    buyUI.sseSource.onerror = () => {
+        if (buyUI.sseSource) buyUI.sseSource.close();
+        if (buyUI.show && buyUI.step === 2) {
+           setTimeout(fallbackCheckPaymentStatus, 2000);
+        }
+    };
+};
 
+onMounted(() => {
+   loadSite();
+   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') fallbackCheckPaymentStatus(); });
+   window.addEventListener('focus', () => fallbackCheckPaymentStatus());
+});
 
-        const openBuy = (p) => { 
-            buyUI.product=p; buyUI.contact=''; buyUI.payMethod='alipay'; buyUI.step=1; buyUI.show=true; 
-            buyUI.showContactWarning=false; buyUI.confirmNoContact=false; buyUI.editingContact=false;
-        };
-        const closeBuy = () => { buyUI.show=false; clearAllTimers(); if(buyUI.step===3) loadSite(); };
-        
-        const doBuy = async () => {
-          if(!buyUI.contact && !buyUI.confirmNoContact) { buyUI.showContactWarning = true; return; }
-          buyUI.showContactWarning = false; buyUI.loading = true;
-          try {
-            const order = await api('/api/order/create', { method:'POST', body: JSON.stringify({productId: buyUI.product.id, contact: buyUI.contact, payMethod: buyUI.payMethod})});
-            buyUI.order = order; buyUI.step = 2; buyUI.timeLeft = (order.frontendExpireTime || order.expireTime) - Date.now();
-            saveLocalOrder(order.orderId, buyUI.product.name);
+const filteredProducts = computed(() => {
+  let arr = site.products.filter(p => !p.isHidden);
 
-            clearAllTimers(); 
-            buyUI.countDownTimer = setInterval(() => {
-                buyUI.timeLeft -= 1000;
-                if(buyUI.timeLeft <= 0) { clearAllTimers(); showToast("支付超时，金额已释放", "error"); closeBuy(); refreshLocalOrdersStatus(); }
-            }, 1000);
-            // 🚀 核心改动：不再使用 setInterval 定时器轮询，而是开启 SSE 监听
-            startSSEListener(order.orderId);
-          } catch(e) {
-          } finally { buyUI.loading = false; }
-        };
+  if(activeCat.value !== 'all') arr = arr.filter(p => p.categoryId === activeCat.value);
+  if(searchKey.value) {
+      const k = searchKey.value.toLowerCase();
+      arr = arr.filter(p => p.name.toLowerCase().includes(k) || (p.desc && p.desc.toLowerCase().includes(k)));
+  }
+  return arr;
+});
 
-        const updateOrderContact = async () => {
-           if(!buyUI.editContactInput) return;
-           try {
-             globalLoading.value = true;
-             await api('/api/order/updateContact', { method: 'POST', body: JSON.stringify({ orderId: buyUI.order.orderId, contact: buyUI.editContactInput })});
-             buyUI.order.contact = buyUI.editContactInput;
-             buyUI.editingContact = false;
-             showToast('邮箱已安全更新', 'success');
-           } catch(e) {
-           } finally { globalLoading.value = false; }
-        };
+const openBuy = (p) => {
+    buyUI.product=p; buyUI.contact=''; buyUI.payMethod='alipay'; buyUI.step=1; buyUI.show=true;
+    buyUI.showContactWarning=false; buyUI.confirmNoContact=false; buyUI.editingContact=false;
+};
+const closeBuy = () => { buyUI.show=false; clearAllTimers(); if(buyUI.step===3) loadSite(); };
 
-        const doQuery = async (id) => {
-          if(!id) return;
-          globalLoading.value = true; 
-          try {
-            // 查单这种强一致性操作，保留时间戳强制不缓存
-            const d = await api('/api/order/check?orderId=' + id.trim() + '&t=' + Date.now());
-            if(d.status === 'not_found') { showToast('查无此单记录，请检查单号','error'); } 
-            else {
-               queryRes.value = d; showOrderModal.value = true; 
-               const lo = localOrders.value.find(x => x.orderId === id.trim());
-               if(lo) { lo.status = d.status; localStorage.setItem('v_orders', JSON.stringify(localOrders.value)); }
-            }
-          } finally { globalLoading.value = false; }
-        };
+const doBuy = async () => {
+  if(!buyUI.contact && !buyUI.confirmNoContact) { buyUI.showContactWarning = true; return; }
+  buyUI.showContactWarning = false; buyUI.loading = true;
+  try {
+    const order = await api('/api/order/create', { method:'POST', body: JSON.stringify({productId: buyUI.product.id, contact: buyUI.contact, payMethod: buyUI.payMethod})});
+    buyUI.order = order; buyUI.step = 2; buyUI.timeLeft = (order.frontendExpireTime || order.expireTime) - Date.now();
+    saveLocalOrder(order.orderId, buyUI.product.name);
 
-        const resumePayment = () => {
-          showOrderModal.value = false; 
-          // 恢复支付时如果有前端倒计时时间，优先使用
-          const left = (queryRes.value.frontendExpireTime || queryRes.value.expireTime) - Date.now();
-          if (left <= 0 || queryRes.value.status === 'expired') {
-             showToast('该订单已超时失效，金额已释放请重新下单', 'error');
-             queryRes.value.status = 'expired'; refreshLocalOrdersStatus(); return;
-          }
-          buyUI.order = queryRes.value; buyUI.step = 2; buyUI.timeLeft = left; buyUI.show = true; buyUI.editingContact = false;
+    clearAllTimers();
+    buyUI.countDownTimer = setInterval(() => {
+        buyUI.timeLeft -= 1000;
+        if(buyUI.timeLeft <= 0) { clearAllTimers(); showToast("支付超时，金额已释放", "error"); closeBuy(); refreshLocalOrdersStatus(); }
+    }, 1000);
+    startSSEListener(order.orderId);
+  } catch(e) {
+  } finally { buyUI.loading = false; }
+};
 
-          clearAllTimers();
-          buyUI.countDownTimer = setInterval(() => {
-              buyUI.timeLeft -= 1000;
-              if(buyUI.timeLeft <= 0) { clearAllTimers(); showToast("支付超时，订单关闭", "error"); closeBuy(); refreshLocalOrdersStatus(); }
-          }, 1000);
-          // 🚀 核心改动：使用 SSE 监听，防止恢复订单时产生大量请求
-          startSSEListener(queryRes.value.orderId);
-        };
+const updateOrderContact = async () => {
+   if(!buyUI.editContactInput) return;
+   try {
+     globalLoading.value = true;
+     await api('/api/order/updateContact', { method: 'POST', body: JSON.stringify({ orderId: buyUI.order.orderId, contact: buyUI.editContactInput })});
+     buyUI.order.contact = buyUI.editContactInput;
+     buyUI.editingContact = false;
+     showToast('邮箱已安全更新', 'success');
+   } catch(e) {
+   } finally { globalLoading.value = false; }
+};
 
-        return {
-          globalLoading, showService, showOrderModal, toast, copy, formatTime, formatRealTime, getStockStatus,
-          frontTab, site, activeCat, isExclusiveMode, searchKey, filteredProducts, buyUI, openBuy, closeBuy, doBuy, updateOrderContact,
-          localOrders, queryId, queryRes, doQuery, resumePayment
-        };
-      }
-    }).mount('#app');
-  </script>
-</body>
-</html>
+const doQuery = async (id) => {
+  if(!id) return;
+  globalLoading.value = true;
+  try {
+    const d = await api('/api/order/check?orderId=' + id.trim() + '&t=' + Date.now());
+    if(d.status === 'not_found') { showToast('查无此单记录，请检查单号','error'); }
+    else {
+       queryRes.value = d; showOrderModal.value = true;
+       const lo = localOrders.value.find(x => x.orderId === id.trim());
+       if(lo) { lo.status = d.status; localStorage.setItem('v_orders', JSON.stringify(localOrders.value)); }
+    }
+  } finally { globalLoading.value = false; }
+};
 
+const resumePayment = () => {
+  showOrderModal.value = false;
+  const left = (queryRes.value.frontendExpireTime || queryRes.value.expireTime) - Date.now();
+  if (left <= 0 || queryRes.value.status === 'expired') {
+     showToast('该订单已超时失效，金额已释放请重新下单', 'error');
+     queryRes.value.status = 'expired'; refreshLocalOrdersStatus(); return;
+  }
+  buyUI.order = queryRes.value; buyUI.step = 2; buyUI.timeLeft = left; buyUI.show = true; buyUI.editingContact = false;
 
+  clearAllTimers();
+  buyUI.countDownTimer = setInterval(() => {
+      buyUI.timeLeft -= 1000;
+      if(buyUI.timeLeft <= 0) { clearAllTimers(); showToast("支付超时，订单关闭", "error"); closeBuy(); refreshLocalOrdersStatus(); }
+  }, 1000);
+  startSSEListener(queryRes.value.orderId);
+};
+
+</script>
