@@ -17,6 +17,9 @@ function checkRateLimit(ip) {
   return record.count <= 3; 
 }
 
+// 🌟 性能优化：数据库清理节流锁，避免高频请求压垮 D1
+let lastCleanupTime = 0;
+
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -55,7 +58,11 @@ export async function onRequest(context) {
     // ==========================================
     if (path === "/api/order/create" && method === "POST") {
       // 【优化核心点】只在即将产生真实交易的时刻，清理垃圾库存，减轻 D1 数据库整体负担
-      context.waitUntil(db.cleanUpExpiredOrders());
+      // 加入 5 分钟节流，极大减少数据库全表扫描
+      if (Date.now() - lastCleanupTime > 300000) {
+        lastCleanupTime = Date.now();
+        context.waitUntil(db.cleanUpExpiredOrders());
+      }
 
       const config = await db.getConfig();
       if (!config.isOpen) return Utils.json({ error: "站点维护中，暂不支持购买" }, 403);
@@ -123,7 +130,10 @@ export async function onRequest(context) {
 
     // 常规查单接口 (用于历史订单查询)
     if (path === "/api/order/check" && method === "GET") {
-      context.waitUntil(db.cleanUpExpiredOrders());
+      if (Date.now() - lastCleanupTime > 300000) {
+        lastCleanupTime = Date.now();
+        context.waitUntil(db.cleanUpExpiredOrders());
+      }
 
       const orderId = url.searchParams.get("orderId");
       if (!orderId) return Utils.json({ error: "缺少单号" }, 400);
@@ -140,6 +150,41 @@ export async function onRequest(context) {
         }
       }
       return Utils.json(order || { status: "not_found" });
+    }
+
+    // 🚀 批量查单接口 (用于首页前端批量刷新本地未完成订单)
+    if (path === "/api/order/checkBatch" && method === "POST") {
+      if (Date.now() - lastCleanupTime > 300000) {
+        lastCleanupTime = Date.now();
+        context.waitUntil(db.cleanUpExpiredOrders());
+      }
+
+      const { orderIds } = await request.json();
+      if (!Array.isArray(orderIds) || orderIds.length === 0) {
+          return Utils.json({});
+      }
+
+      const safeIds = orderIds.slice(0, 50);
+      const placeholders = safeIds.map(() => '?').join(',');
+      const query = `SELECT orderId, status, expireTime FROM orders WHERE orderId IN (${placeholders})`;
+
+      const { results } = await db.d1.prepare(query).bind(...safeIds).all();
+
+      const statusMap = {};
+      const now = Date.now();
+      if (results) {
+         for (let order of results) {
+            let status = order.status;
+            if (status === 'pending') {
+               const frontendExpireTime = order.expireTime - 180000;
+               if (now > frontendExpireTime) {
+                  status = 'expired';
+               }
+            }
+            statusMap[order.orderId] = status;
+         }
+      }
+      return Utils.json(statusMap);
     }
 
     // 🚀 核心省流黑科技：SSE 流式接口 (Server-Sent Events)
