@@ -189,13 +189,14 @@ export const useFrontStore = defineStore('front', () => {
   });
 
   const openBuy = (p) => {
-    buyUI.product = p; buyUI.contact = ''; buyUI.payMethod = 'alipay'; buyUI.step = 1; buyUI.show = true;
+    buyUI.product = p; buyUI.contact = ''; buyUI.payMethod = ''; buyUI.step = 1; buyUI.show = true;
     buyUI.showContactWarning = false; buyUI.confirmNoContact = false; buyUI.editingContact = false;
   };
 
   const closeBuy = () => { buyUI.show = false; clearAllTimers(); if (buyUI.step === 3) loadSite(); };
 
   const doBuy = async () => {
+    
     if (!buyUI.contact && !buyUI.confirmNoContact) { buyUI.showContactWarning = true; return; }
     buyUI.showContactWarning = false; buyUI.loading = true;
     try {
