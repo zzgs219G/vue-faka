@@ -189,7 +189,7 @@ export const useFrontStore = defineStore('front', () => {
   });
 
   const openBuy = (p) => {
-    buyUI.product = p; buyUI.contact = ''; buyUI.payMethod = ''; buyUI.step = 1; buyUI.show = true;
+    buyUI.product = p; buyUI.contact = ''; buyUI.payMethod = 'alipay'; buyUI.step = 1; buyUI.show = true;
     buyUI.showContactWarning = false; buyUI.confirmNoContact = false; buyUI.editingContact = false;
   };
 
