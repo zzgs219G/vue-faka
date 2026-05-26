@@ -285,6 +285,9 @@ export async function onRequest(context) {
           ).bind(order.orderId).first();
 
           if (result && result.card) {
+          await db.d1.prepare(
+    "UPDATE orders SET payMethod = ? WHERE orderId = ?"
+).bind(type, order.orderId).run();
             await db.completeOrder(order.orderId, result.card, env, context);
             await logger.log("发货成功", `单号 ${order.orderId} (金额: ${price}) 已自动提卡发货`);
             return Utils.json({ code: 200, msg: "发货成功" });
