@@ -201,7 +201,12 @@ export async function onRequest(context) {
             ).bind(type, order.orderId).run();
             await db.completeOrder(order.orderId, result.card, env, context);
             context.waitUntil(logger.log("发货成功", `单号 ${order.orderId} (金额: ${price}) 已自动提卡发货`));
-            return Utils.json({ code: 200, msg: "发货成功" });
+            return Utils.json({ 
+    code: 200, 
+    msg: "发货成功", 
+    orderId: order.orderId, 
+    productName: order.productName
+});
           } else {
             context.waitUntil(logger.log("发货异常阻断", `单号 ${order.orderId} 提取卡密锁定失败`));
             return Utils.json({ code: 400, msg: "发货失败：库存突然不足或已被释放" });
